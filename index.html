@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Análise Interativa do Classificador de Intenções</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body class="antialiased transition-colors duration-300 ml-[300px]">
+    <div class="relative min-h-screen md:flex">
+      <aside
+        class="w-[300px] hidden md:block w-64 text-gray-800 bg-[#e7e5e1] dark:bg-[#3f3c36] p-4 shrink-0 fixed h-full top-0 left-0"
+      >
+        <h1
+          class="text-xl font-bold text-[#3f3c36] dark:text-[#f8f7f4] mb-6"
+          data-translate-key="sidebar_title"
+        >
+          Análise do Classificador
+        </h1>
+        <nav
+          id="desktop-nav"
+          class="flex flex-col space-y-2 text-[#57534e] dark:text-[#a8a29e]"
+        >
+          <a
+            href="#objetivo"
+            class="nav-link p-2 rounded-md"
+            data-translate-key="nav_objective"
+            >Objetivo e Escopo</a
+          >
+          <a
+            href="#arquitetura"
+            class="nav-link p-2 rounded-md"
+            data-translate-key="nav_architecture"
+            >Arquitetura Híbrida</a
+          >
+          <a
+            href="#treinamento"
+            class="nav-link p-2 rounded-md"
+            data-translate-key="nav_training"
+            >Fase de Treinamento</a
+          >
+          <a
+            href="#predicao"
+            class="nav-link p-2 rounded-md"
+            data-translate-key="nav_prediction"
+            >Fase de Predição</a
+          >
+          <a
+            href="#otimizacoes"
+            class="nav-link p-2 rounded-md"
+            data-translate-key="nav_optimizations"
+            >Otimizações</a
+          >
+          <a
+            href="#conclusao"
+            class="nav-link p-2 rounded-md"
+            data-translate-key="nav_conclusion"
+            >Conclusão</a
+          >
+          <a
+            href="#gerenciar-dados"
+            class="nav-link p-2 rounded-md"
+            data-translate-key="nav_manage_data"
+            >Gerenciar Dados</a
+          >
+          <a
+            href="#explorador"
+            class="nav-link p-2 rounded-md font-bold mt-4 bg-white dark:bg-[#57534e] dark:text-[#f8f7f4] shadow"
+            data-translate-key="nav_explorer"
+            >Explorador Interativo</a
+          >
+        </nav>
+        <div class="absolute bottom-4 left-4 right-4">
+          <div
+            class="flex items-center justify-between text-[#57534e] dark:text-[#a8a29e]"
+          >
+            <div class="flex items-center space-x-2">
+              <button
+                id="theme-toggle"
+                class="p-2 rounded-md hover:bg-[#d1c9bd] dark:hover:bg-[#57534e]"
+              >
+                <svg
+                  id="theme-toggle-dark-icon"
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+                  ></path>
+                </svg>
+                <svg
+                  id="theme-toggle-light-icon"
+                  class="w-5 h-5 hidden"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z"
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+              </button>
+              <div class="flex space-x-1 text-sm">
+                <button id="lang-pt" class="font-bold p-1">PT</button>
+                <span>|</span>
+                <button id="lang-en" class="p-1">EN</button>
+              </div>
+            </div>
+            <a
+              href="https://github.com/cookieukw"
+              target="_blank"
+              class="text-xs hover:underline"
+              >cookieukw</a
+            >
+          </div>
+        </div>
+      </aside>
+
+      <main class="flex-1 p-6 sm:p-8 md:p-12">
+        <div class="max-w-4xl mx-auto prose dark:prose-invert">
+          <section id="objetivo">
+            <h2 data-translate-key="objective_title">
+              1. Objetivo e Escopo da Classe `IntentClassifier`
+            </h2>
+            <p data-translate-key="objective_p1">
+              O <code>IntentClassifier</code> funciona como um motor de
+              <strong>NLU (Natural Language Understanding)</strong>. Sua função
+              primária é receber uma entrada de texto do usuário (uma
+              "utterance") e classificá-la dentro de um conjunto pré-definido de
+              categorias, conhecidas como "intenções". Este componente é
+              fundamental para sistemas de diálogo, como chatbots, pois traduz a
+              linguagem humana em comandos estruturados que um sistema pode
+              processar.
+            </p>
+            <ul>
+              <li data-translate-key="objective_li1">
+                <strong>Entrada:</strong> Uma string de texto (ex:
+                <code>"qual o status do meu pedido?"</code>).
+              </li>
+              <li data-translate-key="objective_li2">
+                <strong>Processamento:</strong> Análise léxica e semântica do
+                texto.
+              </li>
+              <li data-translate-key="objective_li3">
+                <strong>Saída:</strong> A intenção mais provável (ex:
+                <code>"verificar_status_pedido"</code>) e uma resposta
+                associada.
+              </li>
+            </ul>
+          </section>
+          <section id="arquitetura">
+            <h2 data-translate-key="architecture_title">
+              2. Arquitetura Híbrida de Classificação
+            </h2>
+            <p data-translate-key="architecture_p1">
+              O classificador implementa uma
+              <strong>abordagem híbrida em duas etapas</strong>, uma estratégia
+              que visa equilibrar precisão, recall e performance. Esta
+              arquitetura em pipeline garante que casos simples sejam resolvidos
+              rapidamente, enquanto casos mais complexos recebem uma análise
+              mais profunda.
+            </p>
+            <div
+              class="my-8 bg-white dark:bg-[#3f3c36] p-6 rounded-lg shadow-md border border-[#d1c9bd] dark:border-[#57534e]"
+            >
+              <h3
+                class="mt-0 text-center font-bold"
+                data-translate-key="flowchart_title"
+              >
+                Fluxo de Classificação
+              </h3>
+              <div class="flex flex-col items-center space-y-4">
+                <div
+                  class="w-full p-3 bg-amber-100 border border-amber-300 rounded-lg text-center text-amber-900"
+                  data-translate-key="flowchart_input"
+                >
+                  Entrada do Usuário
+                </div>
+                <div class="text-2xl font-mono text-[#b4ad9f]">&darr;</div>
+                <div
+                  class="w-full p-4 bg-sky-100 border border-sky-300 rounded-lg text-sky-900"
+                >
+                  <h4
+                    class="font-bold text-center"
+                    data-translate-key="flowchart_step1_title"
+                  >
+                    Etapa 1: Similaridade de String
+                  </h4>
+                  <p
+                    class="text-sm text-center mt-1"
+                    data-translate-key="flowchart_step1_desc"
+                  >
+                    Busca por correspondência exata ou com erros de digitação
+                    via <strong>Distância de Levenshtein</strong>.
+                  </p>
+                </div>
+                <div class="flex items-center w-full my-2">
+                  <div
+                    class="flex-grow border-t border-gray-300 dark:border-gray-600"
+                  ></div>
+                  <span
+                    class="px-4 text-sm bg-[#f8f7f4] dark:bg-[#2c2a26] text-gray-500 dark:text-gray-400"
+                    data-translate-key="flowchart_question"
+                    >Match Encontrado?</span
+                  >
+                  <div
+                    class="flex-grow border-t border-gray-300 dark:border-gray-600"
+                  ></div>
+                </div>
+                <div class="w-full flex justify-between space-x-4">
+                  <div class="w-1/2 flex flex-col items-center">
+                    <div
+                      class="text-sm text-green-600 font-bold"
+                      data-translate-key="flowchart_yes"
+                    >
+                      SIM
+                    </div>
+                    <div class="text-2xl font-mono text-[#b4ad9f]">&darr;</div>
+                    <div
+                      class="w-full p-3 bg-green-100 border border-green-300 rounded-lg text-center text-green-900"
+                      data-translate-key="flowchart_return"
+                    >
+                      Retorna Intenção
+                    </div>
+                  </div>
+                  <div class="w-1/2 flex flex-col items-center">
+                    <div
+                      class="text-sm text-red-600 font-bold"
+                      data-translate-key="flowchart_no"
+                    >
+                      NÃO
+                    </div>
+                    <div class="text-2xl font-mono text-[#b4ad9f]">&darr;</div>
+                    <div
+                      class="w-full p-4 bg-indigo-100 border border-indigo-300 rounded-lg text-indigo-900"
+                    >
+                      <h4
+                        class="font-bold text-center"
+                        data-translate-key="flowchart_step2_title"
+                      >
+                        Etapa 2: Similaridade Semântica
+                      </h4>
+                      <p
+                        class="text-sm text-center mt-1"
+                        data-translate-key="flowchart_step2_desc"
+                      >
+                        Análise de significado com <strong>TF-IDF</strong> e
+                        <strong>Similaridade de Cosseno</strong>.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="treinamento">
+            <h2 data-translate-key="training_title">
+              3. Análise do Processo de Treinamento (`async train()`)
+            </h2>
+            <p data-translate-key="training_p1">
+              O método <code>train()</code> é responsável por preparar o
+              classificador, transformando os dados brutos de treinamento em
+              modelos matemáticos utilizáveis. Este processo é executado uma
+              única vez antes que as predições possam ser feitas.
+            </p>
+            <h3 data-translate-key="training_h3_1">
+              3.1. Coleta e Preparação do Corpus
+            </h3>
+            <p data-translate-key="training_p2">
+              Inicialmente, os dados são carregados e processados. Um
+              "documento" é criado para cada intenção, agregando todas as suas
+              frases de treinamento. A função
+              <code>nlp.cleanAndTokenize</code> executa tarefas de
+              pré-processamento cruciais como tokenização, normalização, remoção
+              de stopwords e stemming.
+            </p>
+            <h3 data-translate-key="training_h3_2">
+              3.2. O Modelo de Espaço Vetorial: TF-IDF
+            </h3>
+            <p data-translate-key="training_p3">
+              O coração do modelo semântico é o
+              <strong>TF-IDF (Term Frequency-Inverse Document Frequency)</strong
+              >, uma técnica estatística que atribui um peso a cada palavra em
+              um documento, refletindo sua importância.
+            </p>
+            <div class="grid md:grid-cols-2 gap-6 my-6">
+              <div
+                class="bg-white dark:bg-[#3f3c36] p-4 rounded-lg shadow border border-[#d1c9bd] dark:border-[#57534e]"
+              >
+                <h4 class="font-bold" data-translate-key="training_idf_title">
+                  a) IDF (Inverse Document Frequency)
+                </h4>
+                <p class="text-sm" data-translate-key="training_idf_desc">
+                  Mede a <strong>raridade</strong> de uma palavra em todo o
+                  conjunto de dados. Palavras raras (ex: "boleto") são mais
+                  informativas e recebem um peso maior.
+                </p>
+              </div>
+              <div
+                class="bg-white dark:bg-[#3f3c36] p-4 rounded-lg shadow border border-[#d1c9bd] dark:border-[#57534e]"
+              >
+                <h4 class="font-bold" data-translate-key="training_tf_title">
+                  b) TF (Term Frequency)
+                </h4>
+                <p class="text-sm" data-translate-key="training_tf_desc">
+                  Mede a <strong>frequência</strong> de uma palavra dentro de um
+                  único documento (intenção). Palavras que aparecem mais vezes
+                  são mais relevantes para aquele tópico específico.
+                </p>
+              </div>
+            </div>
+            <p data-translate-key="training_p4">
+              O peso final TF-IDF é a multiplicação desses dois valores,
+              resultando em um <strong>vetor</strong> que representa a
+              "impressão digital" semântica de cada intenção.
+            </p>
+          </section>
+          <section id="predicao">
+            <h2 data-translate-key="prediction_title">
+              4. Análise do Processo de Predição (`predict()`)
+            </h2>
+            <p data-translate-key="prediction_p1">
+              Este método executa o pipeline de duas etapas para classificar uma
+              nova mensagem do usuário.
+            </p>
+            <h3 data-translate-key="prediction_h3_1">
+              4.1. Etapa 1: Classificação por Similaridade de String
+              (Levenshtein)
+            </h3>
+            <p data-translate-key="prediction_p2">
+              A <strong>Distância de Levenshtein</strong> é um algoritmo que
+              mede a "distância de edição" entre duas strings. Ele calcula o
+              número mínimo de inserções, exclusões ou substituições de
+              caracteres para transformar uma string na outra, sendo ideal para
+              capturar erros de digitação. A implementação utiliza um limiar
+              dinâmico para maior flexibilidade.
+            </p>
+            <h3 data-translate-key="prediction_h3_2">
+              4.2. Etapa 2: Classificação por Similaridade Semântica (Cosseno)
+            </h3>
+            <p data-translate-key="prediction_p3">
+              Se a Etapa 1 falhar, o sistema recorre à
+              <strong>Similaridade de Cosseno</strong>. Esta métrica mede o
+              ângulo entre os vetores TF-IDF da mensagem do usuário e de cada
+              intenção. Um resultado próximo a 1 indica alta semelhança
+              semântica, enquanto um resultado próximo a 0 indica baixa relação.
+              O resultado só é retornado se ultrapassar um limiar de confiança
+              pré-definido.
+            </p>
+          </section>
+          <section id="otimizacoes">
+            <h2 data-translate-key="optimizations_title">
+              5. Análise de Arquitetura e Otimizações
+            </h2>
+            <h3 data-translate-key="optimizations_h3_1">5.1. Pontos Fortes</h3>
+            <ul>
+              <li data-translate-key="optimizations_li1">
+                <strong>Arquitetura Híbrida:</strong> Combinação robusta de
+                métodos baseados em string e semântica.
+              </li>
+              <li data-translate-key="optimizations_li2">
+                <strong>Execução Local (Client-Side):</strong> Baixa latência e
+                maior privacidade dos dados.
+              </li>
+              <li data-translate-key="optimizations_li3">
+                <strong>Robustez:</strong> Lida corretamente com casos extremos
+                e termos não vistos.
+              </li>
+            </ul>
+            <h3 data-translate-key="optimizations_h3_2">
+              5.2. Otimização de Performance: Caching
+            </h3>
+            <p data-translate-key="optimizations_p1">
+              A principal otimização sugerida é o **caching**. Na implementação
+              original, as frases de treinamento são limpas e tokenizadas a cada
+              chamada de <code>predict()</code>. A solução é pré-processar essas
+              frases uma única vez durante o método <code>train()</code> e
+              armazená-las em cache. Isso move a computação cara para uma fase
+              de inicialização, tornando as predições subsequentes
+              significativamente mais rápidas e escaláveis.
+            </p>
+            <div class="code-block">
+              <pre>// <span data-translate-key="optimizations_code">Exemplo de otimização no método train()</span>
+this.allIntentsForExactMatch = allIntents.map(intent => ({
+    name: intent.name,
+    responses: intent.responses,
+    cachedCleanedPhrases: intent.trainingPhrases.map(phrase => 
+        nlp.cleanAndTokenize(phrase).join(" ") // Processa e armazena
+    )
+}));
+</pre>
+            </div>
+          </section>
+          <section id="conclusao">
+            <h2 data-translate-key="conclusion_title">6. Conclusão</h2>
+            <p data-translate-key="conclusion_p1">
+              O <code>IntentClassifier.ts</code> é uma implementação sólida e
+              bem-sucedida de um classificador de intenções para NLU. Sua
+              arquitetura híbrida resulta em um sistema eficaz. A aplicação de
+              otimizações, como o caching de dados pré-processados, pode
+              aprimorar ainda mais sua performance para aplicações em larga
+              escala.
+            </p>
+          </section>
+
+          <section id="gerenciar-dados">
+            <h2 data-translate-key="manage_data_title">
+              7. Gerenciar Dados de Treino
+            </h2>
+            <p data-translate-key="manage_data_p1">
+              Adicione novas intenções ou mais frases de exemplo às intenções
+              existentes para ver como o classificador se adapta. As alterações
+              são apenas para esta simulação e serão perdidas ao recarregar a
+              página.
+            </p>
+            <div id="training-data-container" class="my-6 space-y-4"></div>
+            <div
+              class="bg-white dark:bg-[#3f3c36] p-6 mt-8 rounded-lg shadow-lg border border-[#d1c9bd] dark:border-[#57534e]"
+            >
+              <h3
+                class="mt-0 font-bold"
+                data-translate-key="manage_data_add_title"
+              >
+                Adicionar Nova Intenção
+              </h3>
+              <div class="space-y-4">
+                <div>
+                  <label
+                    for="new-intent-name"
+                    class="block text-sm font-medium"
+                    data-translate-key="manage_data_name_label"
+                    >Nome da Intenção</label
+                  >
+                  <input
+                    type="text"
+                    id="new-intent-name"
+                    class="mt-1 block w-full rounded-md p-2 bg-white dark:bg-[#2c2a26] border-gray-300 dark:border-[#57534e] shadow-sm focus:border-[#b4ad9f] focus:ring-[#b4ad9f]"
+                    data-translate-key="manage_data_name_placeholder"
+                    placeholder="ex: informacoes_produto"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="new-intent-phrases"
+                    class="block text-sm font-medium"
+                    data-translate-key="manage_data_phrases_label"
+                    >Frases de Treino (separadas por vírgula)</label
+                  >
+                  <textarea
+                    id="new-intent-phrases"
+                    rows="3"
+                    class="mt-1 block w-full rounded-md p-2 bg-white dark:bg-[#2c2a26] border-gray-300 dark:border-[#57534e] shadow-sm focus:border-[#b4ad9f] focus:ring-[#b4ad9f]"
+                    data-translate-key="manage_data_phrases_placeholder"
+                    placeholder="ex: qual o preço?, quanto custa, me fale mais sobre"
+                  ></textarea>
+                </div>
+                <div>
+                  <label
+                    for="new-intent-response"
+                    class="block text-sm font-medium"
+                    data-translate-key="manage_data_response_label"
+                    >Resposta da IA</label
+                  >
+                  <input
+                    type="text"
+                    id="new-intent-response"
+                    class="mt-1 block w-full rounded-md p-2 bg-white dark:bg-[#2c2a26] border-gray-300 dark:border-[#57534e] shadow-sm focus:border-[#b4ad9f] focus:ring-[#b4ad9f]"
+                    data-translate-key="manage_data_response_placeholder"
+                    placeholder="ex: O preço é R$ 50,00."
+                  />
+                </div>
+                <button
+                  id="add-intent-btn"
+                  class="w-full px-4 py-2 bg-[#c7c1b5] text-[#3f3c36] dark:bg-[#57534e] dark:text-[#f8f7f4] font-semibold rounded-md shadow hover:bg-[#b4ad9f] dark:hover:bg-[#71717a]"
+                  data-translate-key="manage_data_add_btn"
+                >
+                  Adicionar Intenção
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section id="explorador">
+            <h2 class="!mt-24" data-translate-key="explorer_title">
+              🧪 Explorador Interativo do Classificador
+            </h2>
+            <p data-translate-key="explorer_p1">
+              Digite uma frase abaixo para simular como o classificador
+              processaria sua entrada. A simulação usa os dados de treino acima
+              para demonstrar a lógica de duas etapas em ação.
+            </p>
+            <div
+              class="bg-white dark:bg-[#3f3c36] p-6 my-8 rounded-lg shadow-lg border border-[#d1c9bd] dark:border-[#57534e]"
+            >
+              <div class="w-full">
+                <label
+                  for="userInput"
+                  class="block text-sm font-medium"
+                  data-translate-key="explorer_label"
+                  >Sua mensagem:</label
+                >
+                <div class="mt-1 flex rounded-md shadow-sm">
+                  <input
+                    type="text"
+                    id="userInput"
+                    class="flex-1 block w-full rounded-none rounded-l-md p-2 bg-white dark:bg-[#2c2a26] border-gray-300 dark:border-[#57534e] focus:ring-[#b4ad9f] focus:border-[#b4ad9f]"
+                    data-translate-key="explorer_placeholder"
+                    placeholder="Ex: olá, tudo bem?"
+                  />
+                  <button
+                    id="classifyBtn"
+                    class="inline-flex items-center px-4 py-2 border border-l-0 border-gray-300 dark:border-[#57534e] rounded-r-md bg-gray-50 dark:bg-[#57534e] text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#71717a]"
+                    data-translate-key="explorer_button"
+                  >
+                    Classificar
+                  </button>
+                </div>
+              </div>
+              <div id="results" class="mt-6 hidden">
+                <div
+                  class="p-4 rounded-lg bg-gray-50 dark:bg-[#2c2a26] border border-gray-200 dark:border-[#57534e]"
+                >
+                  <h3
+                    class="mt-0 font-bold"
+                    data-translate-key="explorer_stage1_title"
+                  >
+                    Análise da Etapa 1: Similaridade de String (Levenshtein)
+                  </h3>
+                  <div id="levenshteinResult"></div>
+                </div>
+                <div
+                  id="cosineSection"
+                  class="mt-4 p-4 rounded-lg bg-gray-50 dark:bg-[#2c2a26] border border-gray-200 dark:border-[#57534e] hidden"
+                >
+                  <h3
+                    class="mt-0 font-bold"
+                    data-translate-key="explorer_stage2_title"
+                  >
+                    Análise da Etapa 2: Similaridade Semântica (Cosseno)
+                  </h3>
+                  <div id="cosineResult" class="space-y-3"></div>
+                </div>
+                <div
+                  class="mt-6 p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-500/30"
+                >
+                  <h3
+                    class="mt-0 font-bold text-amber-900 dark:text-amber-200"
+                    data-translate-key="explorer_final_title"
+                  >
+                    Resultado Final
+                  </h3>
+                  <div id="finalResult"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <script src="/js/intents.js"></script>
+    <script src="/js/translation.js"></script>
+    <script src="/js/script.js"></script>
+  </body>
+</html>
