@@ -3,8 +3,8 @@
 A lightweight NLU (Natural Language Understanding) intent classifier, running 100% on the client-side, written in TypeScript.  
 This project uses a hybrid approach to classify a user's intent from text messages, combining the accuracy of string similarity with the robustness of semantic analysis.
 
-✨ **Check out the Interactive Classifier Demo**
-
+✨ ** [Check out the Hybrid Intent Classifier online demo](https://vex-intent-classifier.netlify.app/) **
+✨ ** [Check out the Hybrid Intent Classifier source code](https://github.com/Vex-AI/Vex-AI/tree/main/classes) **
 ---
 
 ## About the Project
