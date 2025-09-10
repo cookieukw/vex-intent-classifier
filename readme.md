@@ -3,11 +3,12 @@
 A lightweight NLU (Natural Language Understanding) intent classifier, running 100% on the client-side, written in TypeScript.  
 This project uses a hybrid approach to classify a user's intent from text messages, combining the accuracy of string similarity with the robustness of semantic analysis.
 
-✨ ** [Check out the Hybrid Intent Classifier online demo](https://vex-intent-classifier.netlify.app/) **
-✨ ** [Check out the Hybrid Intent Classifier source code](https://github.com/Vex-AI/Vex-AI/tree/main/classes) **
----
+✨ **[Check out the Hybrid Intent Classifier online demo](https://vex-intent-classifier.netlify.app/)**
+
+## ✨ **[Check out the Hybrid Intent Classifier source code](https://github.com/Vex-AI/Vex-AI/tree/main/classes)**
 
 ## About the Project
+
 This classifier is designed to be the "brain" of a chatbot or virtual assistant that needs to understand human language without relying on external APIs.  
 Since it runs entirely in the browser, it provides low-latency responses and ensures user data privacy.
 
@@ -16,43 +17,50 @@ Since it runs entirely in the browser, it provides low-latency responses and ens
 ---
 
 ## Key Features
-- **Hybrid Architecture:** Two-step strategy for maximum efficiency and accuracy.  
-- **Client-Side:** No server required for NLU processing.  
-- **Lightweight and Fast:** Optimized for performance in web applications.  
-- **Error-Tolerant:** Handles typos and variations in phrasing.  
+
+- **Hybrid Architecture:** Two-step strategy for maximum efficiency and accuracy.
+- **Client-Side:** No server required for NLU processing.
+- **Lightweight and Fast:** Optimized for performance in web applications.
+- **Error-Tolerant:** Handles typos and variations in phrasing.
 
 ---
 
 ## How It Works
+
 The classifier operates in two main phases: **Training** and **Prediction**.
 
 ### 1. Training Phase (`async train()`)
+
 Before it can classify messages, the model must be trained with a set of intents and example phrases. The process involves:
 
-- **Data Loading:** Intents and training phrases are loaded (e.g., from a local database such as `vexDB`).  
-- **IDF Calculation (Inverse Document Frequency):** The classifier determines the importance and rarity of each word.  
-- **TF-IDF Vectorization:** Each intent is transformed into a TF-IDF vector, a semantic “fingerprint” representing its meaning numerically.  
+- **Data Loading:** Intents and training phrases are loaded (e.g., from a local database such as `vexDB`).
+- **IDF Calculation (Inverse Document Frequency):** The classifier determines the importance and rarity of each word.
+- **TF-IDF Vectorization:** Each intent is transformed into a TF-IDF vector, a semantic “fingerprint” representing its meaning numerically.
 
 ### 2. Prediction Phase (`predict()`)
+
 When a user sends a message, the classifier runs a two-step pipeline:
 
 #### Step 1: String Similarity (Levenshtein)
-- Compares the input with training phrases using **Levenshtein Distance**.  
-- If a close match is found (typo-tolerant), the corresponding intent is returned immediately.  
+
+- Compares the input with training phrases using **Levenshtein Distance**.
+- If a close match is found (typo-tolerant), the corresponding intent is returned immediately.
 
 #### Step 2: Semantic Similarity (Cosine)
-- If the first step fails, the input is converted into a TF-IDF vector.  
-- Computes **Cosine Similarity** between the input vector and trained intent vectors.  
-- Returns the intent with the highest similarity score, provided it exceeds a minimum confidence threshold.  
+
+- If the first step fails, the input is converted into a TF-IDF vector.
+- Computes **Cosine Similarity** between the input vector and trained intent vectors.
+- Returns the intent with the highest similarity score, provided it exceeds a minimum confidence threshold.
 
 ---
 
 ## Usage Example
+
 Basic usage in TypeScript:
 
 ```ts
 // Import the classifier
-import { IntentClassifier } from './lib/IntentClassifier';
+import { IntentClassifier } from "./lib/IntentClassifier";
 
 // 1. Create an instance
 const classifier = new IntentClassifier();
@@ -82,14 +90,14 @@ function findIntent(message: string) {
 // Examples
 findIntent("hi, how are you?");
 findIntent("I want to pay my bill");
-````
+```
 
 ---
 
 ## Dependencies
 
-* **@/lib/vexDB:** A Dexie.js instance or other DB wrapper to store and retrieve intents.
-* **./nlp-util:** Utility module containing NLP functions such as `cleanAndTokenize`, `levenshtein`, and `cosineSimilarity`.
+- **@/lib/vexDB:** A Dexie.js instance or other DB wrapper to store and retrieve intents.
+- **./nlp-util:** Utility module containing NLP functions such as `cleanAndTokenize`, `levenshtein`, and `cosineSimilarity`.
 
 ---
 
@@ -103,5 +111,3 @@ findIntent("I want to pay my bill");
 
 This project is licensed under the **MIT License**.
 See the LICENSE file for details.
-
-

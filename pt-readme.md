@@ -4,8 +4,9 @@ Um classificador de intenções NLU (Natural Language Understanding) leve, execu
 Este projeto utiliza uma abordagem híbrida para classificar a intenção de um usuário a partir de uma mensagem de texto, combinando a precisão da similaridade de string com a robustez da análise semântica.
 
 
-✨ ** [Veja uma demonstração online do Classificador de Intenções Híbrido](https://vex-intent-classifier.netlify.app/) **
-✨ ** [Veja o código fonte do Classificador de Intenções Híbrido](https://github.com/Vex-AI/Vex-AI/tree/main/classes) **
+✨ **[Veja uma demonstração online do Classificador de Intenções Híbrido](https://vex-intent-classifier.netlify.app/)**
+
+✨ **[Veja o código fonte do Classificador de Intenções Híbrido](https://github.com/Vex-AI/Vex-AI/tree/main/classes)**
 
 ---
 
