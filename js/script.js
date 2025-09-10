@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- Translation Data ---
+  const defaultLang = "en";
 
-  let currentLang = "pt";
+  const browserLang = navigator.language?.split("-")[0] || defaultLang;
 
+  let currentLang =
+    localStorage.getItem("lang") ||
+    (translations[browserLang] ? browserLang : defaultLang);
+
+  //console.log("Current Language:", currentLang);
   const trainingDataContainer = document.getElementById(
     "training-data-container"
   );
