@@ -14,6 +14,8 @@ Este projeto utiliza uma abordagem híbrida para classificar a intenção de um 
 Este classificador foi projetado para ser o "cérebro" de um chatbot ou assistente virtual que precisa entender a linguagem humana sem depender de APIs externas.  
 Por ser executado inteiramente no navegador, ele oferece respostas de baixa latência e garante a privacidade dos dados do usuário.
 
+📖 Para a versão em inglês, visite [`readme.md`](./readme.md).
+
 ---
 
 ## Principais Características
